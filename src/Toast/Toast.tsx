@@ -1,17 +1,19 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useLayoutEffect } from 'react';
 import BugReportIcon from '@mui/icons-material/BugReport';
 import ReportGmailerrorredIcon from '@mui/icons-material/ReportGmailerrorred';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { ThemeProvider } from 'styled-components';
-import { Transition } from 'react-transition-group';
 
 import StyledToast, { Button, TextBox, Title, Description } from './styled';
-import { theme } from './theme';
+import { theme, GlobalStyle } from './theme';
 import Toast from './ToastLogic';
-import ReactDOM from 'react-dom';
 
-export interface Position { vertical: 'top' | 'bottom' | 'center', horizontal: 'left' | 'center' | 'right', offset?: number }
+export interface Position {
+  vertical: 'top' | 'bottom' | 'center';
+  horizontal: 'left' | 'center' | 'right';
+  offset?: number;
+}
 export interface Props {
   message: string;
   title?: string;
@@ -19,9 +21,9 @@ export interface Props {
   color?: string;
   fontSize?: number;
   autohideDuration?: number;
-  position?: Position
-  animationAppearance?: 'left' | 'right' | 'top' | 'bottom'
-  open: boolean
+  position?: Position;
+  animationAppearance?: 'left' | 'right' | 'top' | 'bottom';
+  open: boolean;
 }
 
 const iconResolver = (variant: string) => {
@@ -38,30 +40,45 @@ const iconResolver = (variant: string) => {
 };
 
 export const ToastView = (props: Props) => {
-  const { message, title, variant = 'info', autohideDuration, position = { vertical: 'bottom', horizontal: 'left' } } = props;
+  const { message, title, open, variant = 'info', autohideDuration, position = { vertical: 'bottom', horizontal: 'left' } } = props;
 
-  const [open, setOpen] = useState(true)
-  const toaster = Toast.getToast()
+  const toaster = Toast.getToast();
+  const unicId = `${props.message}-${props.title ? props.title : ''}`;
   
-  const handleClick = () => {
-    console.log(toaster.storage)
+  const nextPosition = {
+    ...position,
+    offset: 0
   }
 
-  useEffect(() => {
-    console.log('rendered')
-    // ReactDOM.unmountComponentAtNode(document.querySelector('#portal') as HTMLElement)
+  const handleClick = () => {
+    console.log(toaster.storage);
+  };
+
+  useLayoutEffect(() => {
+    const el = document.getElementById(`portal-${unicId}`)
+
+    if (!el) {
+      const wrapperElement = document.createElement('div');
+      wrapperElement.setAttribute("id", `portal-${unicId}`);
+      document.body.appendChild(wrapperElement);
+    }
+
+    return () => document.getElementById(`portal-${unicId}`)?.remove()
   }, [])
 
-  return <ThemeProvider theme={theme}>
-    {/* {open && ( */}
+  return (
+    <ThemeProvider theme={theme}>
       <StyledToast {...props}>
         {iconResolver(variant)}
         <TextBox>
           {title && <Title fontSize={props.fontSize}>{title}</Title>}
           <Description>{message}</Description>
         </TextBox>
-        <Button variant={variant} onClick={handleClick}>&#10006;</Button>
+        <Button variant={variant} onClick={handleClick}>
+          &#10006;
+        </Button>
       </StyledToast>
-    {/* )} */}
-  </ThemeProvider>
+      <GlobalStyle position={nextPosition} selector={`portal-${unicId}`}/>
+    </ThemeProvider>
+  );
 };

@@ -1,11 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { ToastsWrapper } from './styled';
+import { GlobalStyle } from './theme';
 import { Position, Props, ToastView } from './Toast';
 
+type StorageItem = { id: string; element: JSX.Element; isOpen: boolean; order: number }
 export default class Toast {
   private static toast: Toast | null = null;
-  storage: { id: string; element: JSX.Element; isOpen: boolean }[];
+  storage: StorageItem[];
   private grab: boolean;
   private start: number;
   private lastPosition: Position;
@@ -31,7 +33,6 @@ export default class Toast {
   private startTimer(id: string, duration: number) {
     return setTimeout(() => {
       this.storage = this.storage.filter(el => el.id !== id);
-      // document.querySelector('#portal-root')?.remove()
       // this.render();
     }, duration);
   }
@@ -59,9 +60,10 @@ export default class Toast {
 
   createToast(props: Props) {
     const unicId = `${props.message}-${props.title ? props.title : ''}`;
-
     if (props.position) {
       this.lastPosition = props.position;
+    } else {
+      this.lastPosition = { vertical: 'bottom', horizontal: 'left', offset: 0 };
     }
 
     const nextProps = {
@@ -78,7 +80,22 @@ export default class Toast {
 
     this.addToStorage(nextProps, unicId, newToast);
 
-    return this.render(unicId);
+    const portal = document.getElementById(`portal-${unicId}`)
+    if (portal) {
+      return ReactDOM.createPortal((
+        props.open && <ToastsWrapper>
+          {newToast}
+        </ToastsWrapper>
+      ), portal)
+    }
+    return null
+  }
+
+  calculateOffset(id: string) {
+    const currentShow = this.storage.filter(el => el.isOpen).length
+    const inQueue = [...this.idQueue].reverse().findIndex(el => el === id)
+
+    return currentShow
   }
 
   private toggleOpenModal(id: string, isOpen: boolean) {
@@ -86,15 +103,17 @@ export default class Toast {
       if (!this.idQueue.includes(id)) {
         this.idQueue.push(id)
       }
-      this.storage = this.storage.map(el => {
-        return el.id === id ? {...el, isOpen} : el
-      })
+      // const ind = this.idQueue.findIndex(el => el === id)
+      // this.storage = this.storage.map(el => el.id === id ? ({...el, order: ind}) : el)
     } else {
       const ind = this.idQueue.findIndex(el => el === id)
       ind !== -1 && this.idQueue.splice(ind, 1)
-      
-      const indToDel = this.storage.findIndex(el => el.id === id)
-      this.storage.splice(indToDel, 1)
+
+      // this.storage = this.storage.filter(el => el.isOpen).map(el => {
+      //   const indAfter = this.idQueue.findIndex(item => item === el.id)
+
+      //   return ({...el, order: indAfter})
+      // })
     }
   }
 
@@ -105,27 +124,39 @@ export default class Toast {
         ...this.storage[currentIndex],
         isOpen: props.open,
       });
-      this.toggleOpenModal(id, props.open)
     } else {
       if (props.open) {
-        this.storage.push({ element: toast, id, isOpen: props.open })
-        this.toggleOpenModal(id, props.open)
+        this.storage.push({ element: toast, id, isOpen: props.open, order: 0 })
       }
     }
+    this.toggleOpenModal(id, props.open)
   }
 
   render(id: string) {
-    const offset = this.idQueue.indexOf(id)
-    return ReactDOM.createPortal(
-      this.storage.map(el => {
-        el.isOpen && console.log(offset, this.idQueue, id)
-        return el.isOpen && el.id === id && (
-          <ToastsWrapper key={el.id} position={{...this.lastPosition, offset}}>
-            {el.element}
-          </ToastsWrapper>
-        )
-      }),
-      document.getElementById('root') as HTMLElement
-    );
+    // const toast = this.storage.find(el => el.id === id)
+    // return ReactDOM.createPortal(
+    //   this.storage.map(el => {
+    //     console.log(el.id === id)
+    //     return el.isOpen && el.id === id && (
+    //       <ToastsWrapper id={`portal-${el.id}-${el.isOpen}`} key={el.id} position={{...this.lastPosition, offset: el.order}}>
+    //         {el.element}
+    //       </ToastsWrapper>
+    //     )
+    //   }),
+    //   document.getElementById('root') as HTMLElement
+    // );
+    // console.log(this.storage)
+    // const multiplier = this.storage.filter(el => el.isOpen).length - 1
+    // const inQueue = [...this.idQueue].reverse().findIndex(el => el === id)
+    // const p = document.getElementById(`portal-${id}`)
+    // if (p) {
+    //   const t = ReactDOM.createPortal(this.storage.map(el => el.isOpen && el.id === id && (
+    //     <ToastsWrapper key={el.id} position={{...this.lastPosition, offset: multiplier - inQueue}}>
+    //       {el.element}
+    //     </ToastsWrapper>
+    //   )), p)
+    //   return t
+    // }
+    // return null
   }
 }

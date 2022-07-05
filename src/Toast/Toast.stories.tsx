@@ -1,4 +1,4 @@
-import React, { ReactPortal, useRef, useState } from 'react';
+import React, { useState } from 'react';
 
 import { ComponentMeta } from '@storybook/react';
 
@@ -17,7 +17,7 @@ export const Some = () => {
       <button onClick={() => setOpenE(prev => !prev)}>Show toast</button>
       <button onClick={() => setOpenS(prev => !prev)}>Show toast</button>
       <button onClick={() => setOpenF(prev => !prev)}>Show toast</button>
-      <CreateToast message="1" open={openE} variant="error" />
+      <CreateToast message="1" open={openE} variant="error" position={{vertical: 'top', horizontal: 'right'}}/>
       <CreateToast message="2" open={openS} variant="warning" />
       <CreateToast message="3" open={openF} variant="success" />
     </div>
