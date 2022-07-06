@@ -3,6 +3,10 @@ import { Props } from './Toast';
 
 export const ToastsWrapper = styled.div``;
 
+const left = keyframes`
+
+`
+
 export default styled.div<Props>`
   width: 400px;
   height: 60px;
@@ -35,6 +39,7 @@ export default styled.div<Props>`
     }
   }};
   font-size: ${props => (props.fontSize ? props.fontSize : 20)}px;
+  animation: ${props => props.animationAppearance} 1s ease-in;
 
   & *::-webkit-scrollbar {
     width: 5px;

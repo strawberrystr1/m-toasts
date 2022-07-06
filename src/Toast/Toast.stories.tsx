@@ -4,22 +4,24 @@ import { ComponentMeta } from '@storybook/react';
 
 import { ToastView } from './Toast';
 import CreateToast from './index';
+import ToastService from '../Toast2/ToastService';
 
 // export const Default = () => <ToastView title="Auuug" variant="error" message="Lormkamka loremkaLoremka loremka" />
 
 export const Some = () => {
-  const [openE, setOpenE] = useState(false)
-  const [openS, setOpenS] = useState(false)
-  const [openF, setOpenF] = useState(false)
   
+  const t = new ToastService()
+  const t1 = t.createToast({ message: 'toast', variant: 'success' })
+  console.log(t1, t)
+
+  const del = () => {
+    t.removeToast(t1.id)
+    console.log(t)
+  }
+
   return (
     <div>
-      <button onClick={() => setOpenE(prev => !prev)}>Show toast</button>
-      <button onClick={() => setOpenS(prev => !prev)}>Show toast</button>
-      <button onClick={() => setOpenF(prev => !prev)}>Show toast</button>
-      <CreateToast message="1" open={openE} variant="error" position={{vertical: 'top', horizontal: 'right'}}/>
-      <CreateToast message="2" open={openS} variant="warning" />
-      <CreateToast message="3" open={openF} variant="success" />
+      <button onClick={del}>a</button>
     </div>
   );
 };

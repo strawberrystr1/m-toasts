@@ -8,6 +8,7 @@ import { ThemeProvider } from 'styled-components';
 import StyledToast, { Button, TextBox, Title, Description } from './styled';
 import { theme, GlobalStyle } from './theme';
 import Toast from './ToastLogic';
+import { CSSTransition } from 'react-transition-group';
 
 export interface Position {
   vertical: 'top' | 'bottom' | 'center';
@@ -40,14 +41,14 @@ const iconResolver = (variant: string) => {
 };
 
 export const ToastView = (props: Props) => {
-  const { message, title, open, variant = 'info', autohideDuration, position = { vertical: 'bottom', horizontal: 'left' } } = props;
+  const { message, title, animationAppearance, open, variant = 'info', autohideDuration, position = { vertical: 'bottom', horizontal: 'left' } } = props;
 
   const toaster = Toast.getToast();
   const unicId = `${props.message}-${props.title ? props.title : ''}`;
   
   const nextPosition = {
     ...position,
-    offset: 0
+    offset: toaster.calculateOffset(unicId, `${position.vertical}-${position.horizontal}`)
   }
 
   const handleClick = () => {
@@ -68,7 +69,7 @@ export const ToastView = (props: Props) => {
 
   return (
     <ThemeProvider theme={theme}>
-      <StyledToast {...props}>
+      <StyledToast {...props} className={`toast ${animationAppearance}`}>
         {iconResolver(variant)}
         <TextBox>
           {title && <Title fontSize={props.fontSize}>{title}</Title>}
