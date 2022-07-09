@@ -1,8 +1,8 @@
-import styled from "styled-components"
+import styled, { css } from "styled-components"
 
-import { IStorageToastItem, IToastConfig } from "./types"
-import * as variants from './constants'
-import { animationResolver } from "./animations"
+import { IStorageToastItem, IToastConfig } from "../types"
+import { animationResolver } from "../constants/animations"
+import * as variants from '../constants/constants'
 
 export const ToastWrapper = styled.div<IStorageToastItem>`
   width: ${props => props.width}px;
@@ -15,9 +15,13 @@ export const ToastWrapper = styled.div<IStorageToastItem>`
   font-size: ${props => props.fontSize}px;
   position: relative;
   color: ${props => props.variant === 'warning' ? 'black' : 'white'};
-  animation: ${props => 
-    animationResolver(props.animation, props.position, props.animationDirection)}
-    0.4s cubic-bezier(0.39, 0.575, 0.565, 1) 0s;
+  animation: ${props => {
+    return props.isAnimated ? 
+      css`${animationResolver(props.animation, props.position, props.animationDirection)} 
+      0.4s cubic-bezier(0.39, 0.575, 0.565, 1) 0s;`
+      : 'none;'
+  }};
+    
   &:active {
     cursor: grabbing;
   }
@@ -63,5 +67,19 @@ export const ToastContainerWrapper = styled.div<Pick<IStorageToastItem, 'positio
   width: fit-content;
   height: fit-content;
   position: fixed;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   ${props => variants.positions[props.position]}
+`
+
+export const TestButton = styled.button<{ color: string }>`
+  width: 180px;
+  height: 50px;
+  border: 1px solid black;
+  border-radius: 5px;
+  background-color: ${props => props.color};
+  font-size: 20px;
+  margin-left: 10px;
+  cursor: pointer;
 `

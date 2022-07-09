@@ -1,5 +1,6 @@
 import { keyframes } from "styled-components"
-import { Position } from "./types"
+
+import { Position } from "../types"
 
 const animX100_0 = (sign = '') => {
   const withSign = `${sign}100%`

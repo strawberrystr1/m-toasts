@@ -1,9 +1,10 @@
 import React from 'react';
-
 import BugReportIcon from '@mui/icons-material/BugReport';
 import ReportGmailerrorredIcon from '@mui/icons-material/ReportGmailerrorred';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+
+import { IToastConfig } from '../types';
 
 
 export const error = {
@@ -29,5 +30,20 @@ export const positions = {
   'top-right': 'top: 10px; right: 10px;',
   'bottom-left': 'left 10px; bottom: 10px;',
   'bottom-right': 'right: 10px; bottom: 10px;',
-  'bottom-center': 'right: 50%; bottom: 10px; transform: translateX(-50%);',
+  'bottom-center': 'left: 50%; bottom: 10px; transform: translateX(-50%);',
+}
+
+export const defaultToastProps: Required<IToastConfig> = {
+  width: 350,
+  fontSize: 20,
+  position: 'bottom-left',
+  height: 70,
+  title: '',
+  variant: 'info',
+  spacing: 20,
+  color: '',
+  animation: 'slide',
+  animationDirection: 'forward',
+  isAnimated: true,
+  autoHideDuration: 'none'
 }
