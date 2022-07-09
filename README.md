@@ -1,112 +1,181 @@
-# Tестовое задание библиотека Toast
+# TSDX React w/ Storybook User Guide
 
-## Содержание
+Congrats! You just saved yourself hours of work by bootstrapping this project with TSDX. Let’s get you oriented with what’s here and how to use it.
 
-- [Техническое задание](#Техническое-задание)
-- [Используемые технологии](#Используемые-технологии)
-- [Структура проекта](#Структура-проекта)
-- [Тестирование](#Тестирование)
-- [Как начать](#Как-начать)
-- [Полезные ссылки](#Полезные-ссылки)
+> This TSDX setup is meant for developing React component libraries (not apps!) that can be published to NPM. If you’re looking to build a React-based app, you should use `create-react-app`, `razzle`, `nextjs`, `gatsby`, or `react-static`.
 
-## Техническое задание
-Необходимо реализовать ***Toast*** библиотеку Javascript, для представления не блокирующих уведомлений . Цель состоит в том, чтобы создать базовую библиотеку, которую можно настраивать и расширять.
+> If you’re new to TypeScript and React, checkout [this handy cheatsheet](https://github.com/sw-yx/react-typescript-cheatsheet/)
 
-#### Необходимый функционал:
+## Commands
 
-- Показать уведомление.
-- Возможность устанавливать положению уведомления.
-- Возможность устанавливать тип уведомления (уведомления об успехе, ошибке, оповещение и т.д.).
-- Возможность устанавливать длительность показа уведомления.
-- Возможность задавать заголовок и описание уведомления.
-- Возможность устанавливать отступы уведомления.
-- Возможность изменять цвет типа уведомлений.
-- Возможность изменять анимацию появления и исчезновения.
+TSDX scaffolds your new library inside `/src`, and also sets up a [Parcel-based](https://parceljs.org) playground for it inside `/example`.
 
-#### Дополнительный функционал:
+The recommended workflow is to run TSDX in one terminal:
 
-- Возможность "смахивать" уведомления в сторону для быстрого закрытия.
-- Показ до 3 уведомлений одновременно.
+```bash
+npm start # or yarn start
+```
 
-#### Пример графического представления:
+This builds to `/dist` and runs the project in watch mode so any edits you save inside `src` causes a rebuild to `/dist`.
 
-Ссылка на макет: [Макет "Toast"](https://xd.adobe.com/view/9efd755b-6a29-49bf-4e13-d5cd74643170-e8cc/). Также его можно найти в папке **doc** c расширением **.xd** для программы **Adobe XD**.
+Then run either Storybook or the example playground:
 
-> ![example_1](https://github.com/slava-ovchinnikov/education-task-toast-lib/blob/master/doc/example_1.png?raw=true)
+### Storybook
 
-#### Также проект предполагает:
-- Разделить библиотеку на два основных компонента: представления и логики. Для реализации логики приложения необходимо использовать порождающий паттерн программирования ***"Одиночка"***, который гарантирует, что у класса есть только один экземпляр, и предоставляет к нему глобальную точку доступа (см. подробнее [паттерн Одиночка](https://refactoring.guru/ru/design-patterns/singleton)). При помощи паттерна создать сервисный класс, в котором вы будете задавать конфигурацию и вызывать уведомление. Для реализация представления необходимо использовать **react portals**.
+Run inside another terminal:
 
-- Настроить конфигурации ***babel***, ***eslint***.
+```bash
+yarn storybook
+```
 
-- Подключить и настроить бандлер ***Rollup*** для сборки проекта в библиотеку.
+This loads the stories from `./stories`.
 
-- Подключить и настроить ***Strorybook*** для проверки работоспособности вашей библиотеки.
+> NOTE: Stories should reference the components as if using the library, similar to the example playground. This means importing from the root project directory. This has been aliased in the tsconfig and the storybook webpack config as a helper.
 
-- Обработку ошибок через паттерн ***Error Boundaries***
+### Example
 
-- Проверку типов в React компонентах, передаваемых параметров и подобных объектов.
+Then run the example inside another:
 
-- Использование алиасов для импортирования файлов.
+```bash
+cd example
+npm i # or yarn to install dependencies
+npm start # or yarn start
+```
 
-## Используемые технологии
+The default example imports and live reloads whatever is in `/dist`, so if you are seeing an out of date component, make sure TSDX is running in watch mode like we recommend above. **No symlinking required**, we use [Parcel's aliasing](https://parceljs.org/module_resolution.html#aliases).
 
-### Для react
-- ***node.js*** - программная платформа, основанная на движке V8 (транслирующем JavaScript в машинный код).
-- ***babel*** - транспайлер, преобразующий код из одного стандарта в другой.
-- ***eslint*** - линтер для JavaScript кода.
-- ***yarn*** - менеджер пакетов.
-- ***rollup*** - сборщик ES-модулей.
-- ***stortbook*** - инструмент, используемый для разработки компонентов пользовательского интерфейса в изоляции.
-- ***react*** - JavaScript-библиотека для создания пользовательских интерфейсов.
-- ***prop-types*** - набор валидаторов, которые могут быть использованы для проверки получаемых данных.
-- ***styled-components*** - система стилизации react компонентов.
-- ***cypress*** — e2e тестирование для веб приложений.
+To do a one-off build, use `npm run build` or `yarn build`.
 
- ### Для react native
-Will be soon...
+To run tests, use `npm test` or `yarn test`.
 
-## Структура проекта
+## Configuration
 
-Структура проекта должна быть реализована в том же стиле, что и в первом тестовом задании (см. [Структура проекта](https://github.com/slava-ovchinnikov/education-task-calculator#%D0%A1%D1%82%D1%80%D1%83%D0%BA%D1%82%D1%83%D1%80%D0%B0-%D0%BF%D1%80%D0%BE%D0%B5%D0%BA%D1%82%D0%B0)).
+Code quality is set up for you with `prettier`, `husky`, and `lint-staged`. Adjust the respective fields in `package.json` accordingly.
 
-## Тестирование
+### Jest
 
-Реализовать e2e тестирование c полным покрытием функционала приложения:
-- Сервис для конфигурации Toast-компонента.
-- Графическое (компонент модуля и т.д.)
+Jest tests are set up to run with `npm test` or `yarn test`.
 
-## Как начать
+### Bundle analysis
 
-Эта инструкция поможет вам сделать копию проекта и запустить его на вашей локальной машине для разработки и тестирования.
+Calculates the real cost of your library using [size-limit](https://github.com/ai/size-limit) with `npm run size` and visulize it with `npm run analyze`.
 
-### React/ReactNative
+#### Setup Files
 
-#### Установка 
+This is the folder structure we set up for you:
 
-Для того чтобы получить шаблон проекта, необходимо сделать следующее:
+```txt
+/example
+  index.html
+  index.tsx       # test your component here in a demo app
+  package.json
+  tsconfig.json
+/src
+  index.tsx       # EDIT THIS
+/test
+  blah.test.tsx   # EDIT THIS
+/stories
+  Thing.stories.tsx # EDIT THIS
+/.storybook
+  main.js
+  preview.js
+.gitignore
+package.json
+README.md         # EDIT THIS
+tsconfig.json
+```
 
-1. Зарегистрировать аккаунт в github.
-2. Получить доступ к репозиторию с шаблоном.
-3. Импортировать шаблон в свой репозиторий.
-4. Склонировать репозиторий на свою локальную машину.
+#### React Testing Library
 
-> ![template_1](https://github.com/slava-ovchinnikov/education-task-calculator/blob/master/doc/template.png?raw=true)
+We do not set up `react-testing-library` for you yet, we welcome contributions and documentation on this.
 
-## Полезные ссылки
+### Rollup
 
-[React](https://reactjs.org/docs/getting-started.html)
+TSDX uses [Rollup](https://rollupjs.org) as a bundler and generates multiple rollup configs for various module formats and build settings. See [Optimizations](#optimizations) for details.
 
-[Rollup](https://rollupjs.org/guide/en/)
+### TypeScript
 
-[Storybook](https://storybook.js.org/docs/basics/introduction/)
+`tsconfig.json` is set up to interpret `dom` and `esnext` types, as well as `react` for `jsx`. Adjust according to your needs.
 
-[Eslint](https://eslint.org/docs/user-guide/configuring)
+## Continuous Integration
 
-[Babel](https://babeljs.io/docs/en/configuration)
+### GitHub Actions
 
-[Тестирование Cypress](https://docs.cypress.io/guides/overview/why-cypress.html#In-a-nutshell)
+Two actions are added by default:
 
-[Тестирование Detox](https://github.com/wix/Detox/blob/master/docs/README.md)
+- `main` which installs deps w/ cache, lints, tests, and builds on all pushes against a Node and OS matrix
+- `size` which comments cost comparison of your library on every pull request using [size-limit](https://github.com/ai/size-limit)
 
-[Styled-components](https://www.styled-components.com/docs)
+## Optimizations
+
+Please see the main `tsdx` [optimizations docs](https://github.com/palmerhq/tsdx#optimizations). In particular, know that you can take advantage of development-only optimizations:
+
+```js
+// ./types/index.d.ts
+declare var __DEV__: boolean;
+
+// inside your code...
+if (__DEV__) {
+  console.log('foo');
+}
+```
+
+You can also choose to install and use [invariant](https://github.com/palmerhq/tsdx#invariant) and [warning](https://github.com/palmerhq/tsdx#warning) functions.
+
+## Module Formats
+
+CJS, ESModules, and UMD module formats are supported.
+
+The appropriate paths are configured in `package.json` and `dist/index.js` accordingly. Please report if any issues are found.
+
+## Deploying the Example Playground
+
+The Playground is just a simple [Parcel](https://parceljs.org) app, you can deploy it anywhere you would normally deploy that. Here are some guidelines for **manually** deploying with the Netlify CLI (`npm i -g netlify-cli`):
+
+```bash
+cd example # if not already in the example folder
+npm run build # builds to dist
+netlify deploy # deploy the dist folder
+```
+
+Alternatively, if you already have a git repo connected, you can set up continuous deployment with Netlify:
+
+```bash
+netlify init
+# build command: yarn build && cd example && yarn && yarn build
+# directory to deploy: example/dist
+# pick yes for netlify.toml
+```
+
+## Named Exports
+
+Per Palmer Group guidelines, [always use named exports.](https://github.com/palmerhq/typescript#exports) Code split inside your React app instead of your React library.
+
+## Including Styles
+
+There are many ways to ship styles, including with CSS-in-JS. TSDX has no opinion on this, configure how you like.
+
+For vanilla CSS, you can include it at the root directory and add it to the `files` section in your `package.json`, so that it can be imported separately by your users and run through their bundler's loader.
+
+## Publishing to NPM
+
+We recommend using [np](https://github.com/sindresorhus/np).
+
+## Usage with Lerna
+
+When creating a new package with TSDX within a project set up with Lerna, you might encounter a `Cannot resolve dependency` error when trying to run the `example` project. To fix that you will need to make changes to the `package.json` file _inside the `example` directory_.
+
+The problem is that due to the nature of how dependencies are installed in Lerna projects, the aliases in the example project's `package.json` might not point to the right place, as those dependencies might have been installed in the root of your Lerna project.
+
+Change the `alias` to point to where those packages are actually installed. This depends on the directory structure of your Lerna project, so the actual path might be different from the diff below.
+
+```diff
+   "alias": {
+-    "react": "../node_modules/react",
+-    "react-dom": "../node_modules/react-dom"
++    "react": "../../../node_modules/react",
++    "react-dom": "../../../node_modules/react-dom"
+   },
+```
+
+An alternative to fixing this problem would be to remove aliases altogether and define the dependencies referenced as aliases as dev dependencies instead. [However, that might cause other problems.](https://github.com/palmerhq/tsdx/issues/64)
